@@ -1,0 +1,45 @@
+// =============================================
+// DevDocs Brand Tokens
+// From BRAND.md — Single source of truth
+// =============================================
+
+// --- Light Theme ---
+$surface-100:       #F7F8FA;
+$surface-200:       #EDEEF2;
+$surface-300:       #DFE1E8;
+$ink-900:           #14161A;
+$ink-600:           #4A4F5E;
+$ink-400:           #8B90A0;
+$accent-blue:       #2563EB;
+$accent-blue-soft:  #EFF4FF;
+$code-bg:           #F0F2F5;
+$danger:            #E53E3E;
+
+// --- Dark Theme ---
+$dark-surface-100:  #0D0F14;
+$dark-surface-200:  #161920;
+$dark-surface-300:  #252932;
+$dark-ink-900:      #E8EAF0;
+$dark-ink-600:      #9399AB;
+$dark-ink-400:      #555B6E;
+$dark-accent:       #60A5FA;
+$dark-accent-bg:    #1A2540;
+$dark-code-bg:      #1C2030;
+$dark-danger:       #FC8181;
+
+// --- Font Stacks ---
+$font-display: 'DM Serif Display', 'Georgia', serif;
+$font-body:    'DM Sans', 'Helvetica Neue', sans-serif;
+$font-mono:    'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+// --- Spacing System (4px base) ---
+$space-1:  4px;
+$space-2:  8px;
+$space-3:  12px;
+$space-4:  16px;
+$space-5:  20px;
+$space-6:  24px;
+$space-8:  32px;
+$space-10: 40px;
+$space-12: 48px;
+$space-16: 64px;

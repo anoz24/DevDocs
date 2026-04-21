@@ -1,0 +1,50 @@
+@startuml DevDocsActivity
+
+skinparam RoundCorner 8
+skinparam ActivityBackgroundColor #E8F5E9
+skinparam ActivityBorderColor #2E7D32
+
+start
+
+:Split raw markdown into lines;
+:Initialize root array = [];
+:Initialize currentH1 = null;
+:Initialize currentH2 = null;
+:Initialize currentH3 = null;
+:Initialize buffer = [];
+
+while (More lines to process?) is (Yes)
+  :Read line;
+  if (Does line match /^#{1,3} / ?) then (Yes)
+    :Extract level, title;
+    :Generate slugified ID;
+    :Create new DocSection object;
+    
+    if (level == 1) then (Yes)
+      :Flush buffer to deepest active heading;
+      :Add section to root array;
+      :currentH1 = section;
+      :currentH2 = null;
+      :currentH3 = null;
+    else if (level == 2) then (Yes)
+      :Flush buffer to deepest active heading;
+      :Add section to currentH1 children;
+      :currentH2 = section;
+      :currentH3 = null;
+    else (Level 3)
+      :Flush buffer to deepest active heading;
+      :Add section to currentH2 children;
+      :currentH3 = section;
+    endif
+    
+  else (No)
+    :Add line to buffer;
+  endif
+endwhile (No)
+
+:Flush remaining buffer to deepest active heading;
+:Return root array;
+
+stop
+
+@enduml

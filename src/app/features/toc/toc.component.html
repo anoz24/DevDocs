@@ -1,0 +1,12 @@
+<nav class="toc-nav" aria-label="On this page">
+  <p class="toc-heading">On this page</p>
+  <ul>
+    @for (item of toc.toc$ | async; track item.id) {
+      <li [class.toc--h3]="item.level === 3">
+        <a class="toc-link"
+           (click)="scrollTo(item.id); $event.preventDefault()"
+           [href]="'#' + item.id">{{ item.text }}</a>
+      </li>
+    }
+  </ul>
+</nav>

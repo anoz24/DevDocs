@@ -1,0 +1,79 @@
+<nav class="sidebar-nav" aria-label="Documentation navigation">
+  <!-- Search -->
+  <div class="sidebar-search">
+    <app-search-bar></app-search-bar>
+  </div>
+
+  <!-- Favorites link -->
+  <a class="nav-item nav-favorites"
+     routerLink="/docs/favorites"
+     routerLinkActive="active">
+    <mat-icon>collections_bookmark</mat-icon>
+    <span>Favorites</span>
+  </a>
+
+  <div class="nav-divider"></div>
+
+  <!-- Section tree -->
+  @if (filteredSections$ | async; as sections) {
+    @for (section of sections; track section.id) {
+      <div class="nav-group">
+        <!-- H1 level -->
+        <div class="nav-item nav-parent"
+             [class.active]="false"
+             (click)="toggleExpand(section.id)">
+          <mat-icon class="expand-icon" [class.expanded]="isExpanded(section.id)">
+            chevron_right
+          </mat-icon>
+          <span class="nav-label" (click)="navigateTo(section); $event.stopPropagation()">
+            {{ section.title }}
+          </span>
+        </div>
+
+        <!-- H2 children -->
+        @if (isExpanded(section.id) && section.children.length) {
+          <div class="nav-children">
+            @for (child of section.children; track child.id) {
+              <!-- H2 with sub-children (H3) -->
+              @if (child.children.length) {
+                <div class="nav-subgroup">
+                  <div class="nav-item nav-child nav-child-parent"
+                       (click)="toggleExpand(child.id)">
+                    <mat-icon class="expand-icon sub-expand-icon"
+                              [class.expanded]="isExpanded(child.id)">
+                      chevron_right
+                    </mat-icon>
+                    <span class="nav-label"
+                          (click)="navigateTo(child); $event.stopPropagation()">
+                      {{ child.title }}
+                    </span>
+                  </div>
+
+                  <!-- H3 sub-children -->
+                  @if (isExpanded(child.id)) {
+                    <div class="nav-grandchildren">
+                      @for (grandchild of child.children; track grandchild.id) {
+                        <a class="nav-item nav-grandchild"
+                           [routerLink]="['/docs/section', grandchild.id]"
+                           routerLinkActive="active">
+                          {{ grandchild.title }}
+                        </a>
+                      }
+                    </div>
+                  }
+                </div>
+              } @else {
+                <!-- H2 leaf node (no sub-children) -->
+                <a class="nav-item nav-child"
+                   [routerLink]="['/docs/section', child.id]"
+                   routerLinkActive="active">
+                  {{ child.title }}
+                </a>
+              }
+            }
+          </div>
+        }
+      </div>
+    }
+  }
+</nav>

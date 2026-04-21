@@ -1,0 +1,29 @@
+<div class="favorites-page">
+  <h1 class="doc-h1">
+    <mat-icon class="fav-title-icon">collections_bookmark</mat-icon>
+    Favorites
+  </h1>
+  <p class="favorites-subtitle">Your bookmarked documentation sections.</p>
+
+  @if (favorites.getAll() | async; as favs) {
+    @if (favs.length === 0) {
+      <div class="empty-state">
+        <mat-icon class="empty-icon">bookmark_border</mat-icon>
+        <p>No favorites yet. Bookmark sections while reading to save them here.</p>
+      </div>
+    } @else {
+      <ul class="favorites-list">
+        @for (fav of favs; track fav.id) {
+          <li class="favorite-item" (click)="navigateTo(fav.id)">
+            <mat-icon class="fav-icon">bookmark</mat-icon>
+            <div class="fav-info">
+              <span class="fav-title">{{ fav.title }}</span>
+              <span class="fav-meta">Saved {{ fav.savedAt | date:'medium' }}</span>
+            </div>
+            <mat-icon class="fav-arrow">arrow_forward</mat-icon>
+          </li>
+        }
+      </ul>
+    }
+  }
+</div>

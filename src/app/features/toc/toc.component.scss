@@ -1,0 +1,44 @@
+:host {
+  display: block;
+}
+
+.toc-nav {
+  padding: 24px 16px;
+  position: sticky;
+  top: 0;
+
+  .toc-heading {
+    font-family: 'DM Sans', 'Helvetica Neue', sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    margin-top: 0;
+  }
+
+  ul {
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    list-style: none;
+    margin-bottom: 8px;
+  }
+
+  a {
+    font-family: 'DM Sans', 'Helvetica Neue', sans-serif;
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    display: block;
+    transition: color 120ms;
+
+    &:hover { color: var(--accent); }
+    &.active { color: var(--accent); font-weight: 500; }
+  }
+
+  .toc--h3 { padding-left: 16px; }
+}

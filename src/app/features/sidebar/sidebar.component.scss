@@ -1,0 +1,160 @@
+:host {
+  display: block;
+  padding: 16px;
+}
+
+.sidebar-search {
+  margin-bottom: 12px;
+}
+
+.nav-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 8px 0 12px;
+}
+
+.nav-favorites {
+  text-decoration: none;
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-family: 'DM Sans', 'Helvetica Neue', sans-serif;
+  text-decoration: none;
+
+  &:hover {
+    background: var(--surface-bg);
+    color: var(--text-primary);
+  }
+
+  &.active {
+    background: var(--accent-bg);
+    color: var(--accent);
+    font-weight: 500;
+
+    &::before {
+      content: '';
+      display: block;
+      width: 3px;
+      height: 1em;
+      background: var(--accent);
+      border-radius: 2px;
+      margin-right: 8px;
+    }
+  }
+}
+
+.nav-parent {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.expand-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  transition: transform 200ms ease;
+
+  &.expanded {
+    transform: rotate(90deg);
+  }
+}
+
+.sub-expand-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+
+.nav-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-children {
+  padding-left: 24px;
+  animation: slideDown 200ms ease;
+}
+
+.nav-child {
+  font-weight: 400;
+  font-size: 0.8125rem;
+}
+
+/* H2 child that has its own sub-children */
+.nav-child-parent {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.8125rem;
+}
+
+.nav-subgroup {
+  margin-top: 1px;
+}
+
+/* H3 grandchildren container */
+.nav-grandchildren {
+  padding-left: 20px;
+  animation: slideDown 180ms ease;
+}
+
+.nav-grandchild {
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding: 4px 12px;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: var(--border-color);
+    border-radius: 1px;
+  }
+
+  &:hover {
+    color: var(--text-primary);
+  }
+
+  &.active {
+    color: var(--accent);
+
+    &::before {
+      background: var(--accent);
+      width: 2px;
+    }
+  }
+}
+
+.nav-category {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 24px 16px 8px;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,142 @@
+@startuml DevDocsArchitecture
+
+skinparam classAttributeIconSize 0
+skinparam monochrome false
+skinparam shadowing false
+skinparam RoundCorner 8
+
+package "Models" <<Rectangle>> {
+  interface DocSection {
+    + id: string
+    + title: string
+    + level: number
+    + content: string
+    + children: DocSection[]
+  }
+
+  interface Favorite {
+    + id: string
+    + title: string
+    + savedAt: number
+  }
+
+  interface TocItem {
+    + id: string
+    + text: string
+    + level: number
+  }
+}
+
+package "Core Services" <<Rectangle>> {
+  class GithubService {
+    - http: HttpClient
+    - base: string
+    - owner: string
+    - repo: string
+    - token: string
+    + getReadme(): Observable<string>
+  }
+
+  class DocsParserService {
+    + parse(markdown: string): DocSection[]
+    + slugify(text: string): string
+  }
+
+  class DocsStateService {
+    - github: GithubService
+    - parser: DocsParserService
+    - sectionsSubject: BehaviorSubject<DocSection[]>
+    - loaded: boolean
+    + sections$: Observable<DocSection[]>
+    + loadReadme(): void
+    + getSectionById(id: string): Observable<DocSection>
+    - findSection(sections: DocSection[], id: string): DocSection
+  }
+
+  class FavoritesService {
+    - KEY: string
+    - favorites$: BehaviorSubject<Favorite[]>
+    + getAll(): Observable<Favorite[]>
+    + isFavorite(id: string): boolean
+    + toggle(section: DocSection): void
+    - load(): Favorite[]
+  }
+
+  class TocService {
+    - items$: BehaviorSubject<TocItem[]>
+    + toc$: Observable<TocItem[]>
+    + buildFromDOM(): void
+    + clear(): void
+  }
+
+  class CopyCodeService {
+    + attachButtons(): void
+  }
+  
+  class ThemeService {
+    - isDarkTheme: boolean
+    + isDark(): boolean
+    + toggle(): void
+    - applyTheme(): void
+  }
+}
+
+package "UI Components" <<Rectangle>> {
+  class ShellComponent {
+    + themeService: ThemeService
+  }
+
+  class SidebarComponent {
+    + docsState: DocsStateService
+    + favorites: FavoritesService
+    + searchQuery: string
+    + filteredSections$: Observable<DocSection[]>
+    + ngOnInit(): void
+    + onSearch(query: string): void
+    - filterTree(nodes: DocSection[], query: string): DocSection[]
+  }
+
+  class DocViewerComponent {
+    + currentSection: DocSection
+    - route: ActivatedRoute
+    - docsState: DocsStateService
+    - copyCodeService: CopyCodeService
+    - tocService: TocService
+    - favorites: FavoritesService
+    + ngOnInit(): void
+    + onMarkdownReady(): void
+    + ngOnDestroy(): void
+  }
+
+  class TocComponent {
+    + toc: TocService
+    + scrollTo(id: string): void
+  }
+
+  class FavoritesComponent {
+    + favoritesService: FavoritesService
+  }
+}
+
+' Relationships
+DocsStateService --> GithubService : uses
+DocsStateService --> DocsParserService : uses
+DocsStateService "1" *-- "*" DocSection : holds
+
+SidebarComponent --> DocsStateService : injects
+SidebarComponent --> FavoritesService : injects
+
+DocViewerComponent --> DocsStateService : injects
+DocViewerComponent --> FavoritesService : injects
+DocViewerComponent --> TocService : injects
+DocViewerComponent --> CopyCodeService : injects
+
+TocComponent --> TocService : injects
+FavoritesComponent --> FavoritesService : injects
+ShellComponent --> ThemeService : injects
+
+DocsParserService ..> DocSection : creates
+TocService ..> TocItem : creates
+FavoritesService ..> Favorite : manages
+
+@enduml

@@ -1,0 +1,75 @@
+@startuml DevDocsSequence
+
+skinparam maxMessageSize 150
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+skinparam RoundCorner 8
+
+actor User
+participant "Router" as Router
+participant "DocViewer\nComponent" as Viewer
+participant "DocsState\nService" as State
+participant "Github\nService" as GitHub
+participant "DocsParser\nService" as Parser
+participant "Toc\nService" as TOC
+participant "CopyCode\nService" as Copy
+
+User -> Router : Access /docs/section/{id}
+activate Router
+
+Router -> Viewer : Initialize Component
+activate Viewer
+
+Viewer -> State : getSectionById(id)
+activate State
+
+alt if README not loaded yet
+    State -> GitHub : getReadme()
+    activate GitHub
+    
+    GitHub -> "GitHub API" : GET /repos/owner/repo/readme
+    activate "GitHub API"
+    "GitHub API" --> GitHub : Raw Markdown Text
+    deactivate "GitHub API"
+    
+    GitHub --> State : Raw Markdown Text
+    deactivate GitHub
+    
+    State -> Parser : parse(markdown)
+    activate Parser
+    Parser --> State : DocSection[] (Tree Structure)
+    deactivate Parser
+    
+    State -> State : Cache parsed tree
+end
+
+State -> State : findSection(tree, id)
+State --> Viewer : DocSection object
+deactivate State
+
+Viewer -> Viewer : Pass content to <markdown>
+Viewer -> Viewer : Render nested children H2/H3
+
+... wait for markdown rendering ...
+
+Viewer -> Viewer : (ready) event fires
+activate Viewer
+
+Viewer -> Copy : attachButtons()
+activate Copy
+Copy -> DOM : Find <pre><code>, inject buttons
+Copy --> Viewer
+deactivate Copy
+
+Viewer -> TOC : buildFromDOM()
+activate TOC
+TOC -> DOM : Query h2, h3 elements
+TOC -> TOC : Update items$ BehaviorSubject
+TOC --> Viewer
+deactivate TOC
+
+deactivate Viewer
+deactivate Router
+
+User <-- Viewer : View fully rendered document with TOC
+@enduml
