@@ -18,6 +18,10 @@
   z-index: 100;
   flex-shrink: 0;
 
+  .mobile-menu-btn {
+    display: none; // Hidden by default on desktop
+  }
+
   .brand-logo {
     font-family: 'DM Serif Display', 'Georgia', serif;
     font-size: 1.25rem;
@@ -36,6 +40,16 @@
   grid-template-columns: 260px 1fr 220px;
   flex: 1;
   overflow: hidden;
+  position: relative; // For absolute overlay positioning if needed
+
+  .mobile-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    backdrop-filter: blur(2px);
+  }
 
   .panel {
     overflow-y: auto;
@@ -56,8 +70,39 @@
 }
 
 @media (max-width: 768px) {
+  .toolbar {
+    .mobile-menu-btn {
+      display: block;
+    }
+  }
+
   .shell-layout {
     grid-template-columns: 1fr;
-    .panel--left, .panel--right { display: none; }
+    
+    .panel--center {
+      padding: 1.5rem 1rem;
+    }
+
+    .panel--right { display: none; }
+    
+    .panel--left {
+      position: absolute;
+      top: 0;
+      left: -260px;
+      width: 260px;
+      height: 100%;
+      z-index: 20;
+      transition: left 0.3s ease;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+
+    &.mobile-menu-open {
+      .panel--left {
+        left: 0;
+      }
+      .mobile-overlay {
+        display: block;
+      }
+    }
   }
 }
