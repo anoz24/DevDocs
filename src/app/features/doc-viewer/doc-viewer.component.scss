@@ -17,6 +17,25 @@
   border-bottom: 1px solid var(--border-color);
 }
 
+.mobile-toc {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .mobile-toc {
+    display: block;
+    margin-bottom: 32px;
+    background: var(--surface-raised);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+
+    ::ng-deep .toc-nav {
+      position: static;
+      padding: 16px 20px;
+    }
+  }
+}
+
 .doc-h1 {
   font-family: 'DM Serif Display', 'Georgia', serif;
   font-size: 2rem;

@@ -10,11 +10,12 @@ import { TocService } from '../../core/services/toc.service';
 import { DocSection } from '../../core/models/doc-section.model';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { TocComponent } from '../toc/toc.component';
 
 @Component({
   selector: 'app-doc-viewer',
   standalone: true,
-  imports: [CommonModule, MarkdownComponent, MatIconModule, MatButtonModule],
+  imports: [CommonModule, MarkdownComponent, MatIconModule, MatButtonModule, TocComponent],
   templateUrl: './doc-viewer.component.html',
   styleUrl: './doc-viewer.component.scss'
 })
