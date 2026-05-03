@@ -34,6 +34,10 @@ export class SidebarComponent implements OnInit {
     );
   }
 
+  onSearch(term: string) {
+    this.filter.setTerm(term);
+  }
+
   navigateTo(section: DocSection) {
     this.router.navigate(['/docs/section', section.id]);
   }

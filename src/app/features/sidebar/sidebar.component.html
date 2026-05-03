@@ -1,7 +1,10 @@
 <nav class="sidebar-nav" aria-label="Documentation navigation">
   <!-- Search -->
   <div class="sidebar-search">
-    <app-search-bar></app-search-bar>
+    <app-search-bar
+      [placeholder]="'Search documentation…'"
+      (searchChanged)="onSearch($event)">
+    </app-search-bar>
   </div>
 
   <!-- Favorites link -->

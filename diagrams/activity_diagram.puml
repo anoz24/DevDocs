@@ -1,50 +1,74 @@
-@startuml DevDocsActivity
-
-skinparam RoundCorner 8
-skinparam ActivityBackgroundColor #E8F5E9
-skinparam ActivityBorderColor #2E7D32
-
+@startuml
+skinparam handwritten false
+skinparam class {
+    BackgroundColor White
+    ArrowColor DarkBlue
+    BorderColor DarkBlue
+}
+skinparam Partition {
+    BorderColor Gray
+    BackgroundColor LightGray
+}
+title "DevDocs" Activity Diagram
+|User|
 start
-
-:Split raw markdown into lines;
-:Initialize root array = [];
-:Initialize currentH1 = null;
-:Initialize currentH2 = null;
-:Initialize currentH3 = null;
-:Initialize buffer = [];
-
-while (More lines to process?) is (Yes)
-  :Read line;
-  if (Does line match /^#{1,3} / ?) then (Yes)
-    :Extract level, title;
-    :Generate slugified ID;
-    :Create new DocSection object;
-    
-    if (level == 1) then (Yes)
-      :Flush buffer to deepest active heading;
-      :Add section to root array;
-      :currentH1 = section;
-      :currentH2 = null;
-      :currentH3 = null;
-    else if (level == 2) then (Yes)
-      :Flush buffer to deepest active heading;
-      :Add section to currentH1 children;
-      :currentH2 = section;
-      :currentH3 = null;
-    else (Level 3)
-      :Flush buffer to deepest active heading;
-      :Add section to currentH2 children;
-      :currentH3 = section;
-    endif
-    
-  else (No)
-    :Add line to buffer;
+:Access DevDocs;
+:App Initialization;
+partition "Navigation Flow" {
+|App|
+:Fetch/Load Markdown Content from API;
+:Display Side Navigation (Nested Categories);
+|User|
+repeat
+  :View Side Navigation;
+  :Select a Topic (Nested Route);
+  |App|
+  :Update URL Path;
+  :Swap Main Content area (Child Router Outlet);
+  :Render Markdown as Styled HTML;
+  if (Content contains sections?) then (yes)
+    :Populate Right TOC (On-page navigation);
   endif
-endwhile (No)
-
-:Flush remaining buffer to deepest active heading;
-:Return root array;
-
+  :Display Center Main Content;
+|User|
+repeat while ()
+-> [search];
+}
+partition "Search Flow (RxJS)" {
+|User|
+:Type in Global Search Input;
+|App|
+:Start debounceTime timer (RxJS);
+if (User stops typing for > debounceTime?) then (yes)
+  :Apply filtering to Side Navigation Tree;
+  :Update Side Navigation view (Real-time);
+else (no)
+  :Reset debounceTime timer;
+  stop
+endif
+|User|
+}
+partition "Interactions" {
+|User|
+fork
+  :Click 'Copy Code' Button;
+  |App|
+  :Execute Copy Code Component;
+  :Copy selected code block to clipboard;
+fork again
+  :Click 'Favorite' (Bookmark) icon;
+  |App|
+  if (Is topic already favorited?) then (yes)
+    :Remove topic from Favorites;
+    :Delete favorite from localStorage;
+  else (no)
+    :Add topic to Favorites;
+    :Save favorite to localStorage;
+  endif
+|User|
+end fork
+}
+:Exit App;
+|User|
 stop
-
 @enduml
